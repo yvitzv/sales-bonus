@@ -96,16 +96,19 @@ function analyzeSalesData(data, options) {
         data.products.map(product => [product.sku, product])
     );
 
-    // 🟢 ИСПРАВЛЕНО: весь расчёт находится внутри forEach.
     data.purchase_records.forEach(record => {
         const seller = sellerIndex[record.seller_id];
 
         // Пропускаем запись, если продавец не найден
         if (!seller) return;
 
+        if (!Array.isArray(record.items)) {
+            throw new Error('Некорректный список товаров в покупке');
+        }
+
         seller.sales_count++;
 
-        // Обрабатываем товары в чеке
+    // Обрабатываем товары в чеке
         record.items.forEach(item => {
             const product = productIndex[item.sku];
 
@@ -132,7 +135,6 @@ function analyzeSalesData(data, options) {
     // Сортировка продавцов по прибыли
     sellerStats.sort((a, b) => b.profit - a.profit);
 
-    // 🟢 ИСПРАВЛЕНО: правильное имя sellerStats.
     sellerStats.forEach((seller, index) => {
 
         // Рассчитываем бонус
