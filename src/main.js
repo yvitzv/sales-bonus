@@ -45,20 +45,19 @@ function calculateBonusByProfit(index, total, seller) {
  * Функция для анализа данных продаж
  */
 function analyzeSalesData(data, options) {
-
+    
+    const { calculateRevenue, calculateBonus } = options;
     // Проверка входных данных
-    if (
-        !data ||
-        !Array.isArray(data.sellers) ||
-        !Array.isArray(data.products) ||
-        !Array.isArray(data.purchase_records) ||
-        data.sellers.length === 0 ||
-        data.products.length === 0 ||
-        data.purchase_records.length === 0
+   // @TODO: Проверка входных данных
+    if (!data
+        || !Array.isArray(data.sellers)
+        || !Array.isArray(data.products)
+        || !Array.isArray(data.purchase_records)
+        || data.sellers.length === 0
+        || data.products.length === 0
+        || data.purchase_records.length === 0
     ) {
-        throw new Error(
-            'Данные должны содержать непустые массивы sellers, products и purchase_records'
-        );
+        throw new Error('Некорректные входные данные');
     }
 
     // Проверка функций
@@ -72,8 +71,6 @@ function analyzeSalesData(data, options) {
             'options должен содержать функции calculateRevenue и calculateBonus'
         );
     }
-
-    const { calculateRevenue, calculateBonus } = options;
 
     // Подготовка статистики продавцов
     const sellerStats = data.sellers.map(seller => ({
